@@ -31,16 +31,17 @@ const ProcessCard = ({
 }) => {
 
   const [current, setCurrent] = useState({} as API.ContractStore);
-  // const [curIndex, setCurIndex] = useState(0);
+  const [curIndex, setCurIndex] = useState(0);
 
   useEffect(() => {
     setCurrent(searchData[0] || {})
   }, [searchData])
 
   const rowSelection = {
-    selectedRowKeys: [0],
+    selectedRowKeys: [curIndex],
     onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
       setCurrent(selectedRows[0])
+      setCurIndex(selectedRowKeys[0] as number)
       console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
     },
     getCheckboxProps: (record: any) => ({
@@ -63,6 +64,18 @@ const ProcessCard = ({
       return 'wait'
     }
 
+  }
+
+  const getStep = (cur: API.ContractStore) => {
+    if (cur.status === 1) {
+      return 4
+    } else if (cur.current === cur.threshold) {
+      return 3
+    }
+
+    // const parts = (cur.partAddress || {})
+
+    return cur.current
   }
 
   return (  
@@ -94,7 +107,7 @@ const ProcessCard = ({
           />
         </Col>
         <Col xl={16} lg={24} md={24} sm={24} xs={24}>
-          <Steps current={getStatus(current) === 'finish' ? 4 : current.current} status={getStatus(current)}>
+          <Steps current={getStep(current)} status={getStatus(current)}>
             <Step title="发起签署" description={current.creator} />
             <Step title="药店签署" description="" />
             {current.threshold && <Step title="担保人签署" description="" />}
