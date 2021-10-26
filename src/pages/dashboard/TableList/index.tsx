@@ -259,7 +259,7 @@ const TableList: React.FC = () => {
           defaultMessage: 'Enquiry form',
         })}
         actionRef={actionRef}
-        rowKey="key"
+        rowKey="hash"
         search={{
           labelWidth: 120,
         }}
@@ -278,6 +278,7 @@ const TableList: React.FC = () => {
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
+            debugger
             setSelectedRows(selectedRows);
           },
         }}
